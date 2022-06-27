@@ -1,6 +1,6 @@
 name: grafana-agent
 version: '0.25.1'
-summary: Grafana Agent is a telemetry collector for sending metrics, logs, and trace data
+summary: A telemetry collector for sending metrics, logs, and trace data
 license: Apache-2.0
 contact: simon.aronsson@canonical.com
 issues: https://github.com/simskij/grafana-agent/issues
