@@ -1,15 +1,43 @@
-name: my-snap-name # you probably want to 'snapcraft register <name>'
-version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
-summary: Single-line elevator pitch for your amazing snap # 79 char long summary
+name: grafana-agent
+version: '0.25.1'
+summary: Grafana Agent is a telemetry collector for sending metrics, logs, and trace data
+license: Apache-2.0
+contact: simon.aronsson@canonical.com
+issues: https://github.com/simskij/grafana-agent/issues
+source-code: https://github.com/simskij/grafana-agent
+website: https://grafana.com
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  Grafana Agent is a telemetry collector for sending metrics, 
+  logs, and trace data to the opinionated Grafana observability stack.
+base: core22
+grade: stable
+confinement: classic
+compression: lzo
 
-confinement: devmode # use 'strict' once you have the right plugs and slots
+apps:
+  grafana-agent:
+    command: grafana-agent
+
+architectures:
+  - build-on: amd64
+  - build-on: armhf
+  - build-on: arm64
+  - build-on: s390x
+  - build-on: ppc64el
 
 parts:
-  my-part:
-    # See 'snapcraft plugins'
-    plugin: nil
+  grafana-agent:
+    plugin: go
+    source: https://github.com/grafana/agent
+    source-type: git
+    source-tag: "v$SNAPCRAFT_PROJECT_VERSION"
+    build-snaps: [go]
+    build-environment:
+      - CGO_ENABLED: "0"
+      - GOFLAGS: "-mod=readonly"
+    override-build: |
+      go mod download
+      go build -ldflags "-s -w" ./cmd/agent -o agent
+      cp agent $SNAPCRAFT_PART_INSTALL/grafana-agent
+    stage:
+      - grafana-agent
