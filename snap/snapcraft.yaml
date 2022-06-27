@@ -37,7 +37,7 @@ parts:
       - GOFLAGS: "-mod=readonly"
     override-build: |
       go mod download
-      go build -ldflags "-s -w" ./cmd/agent -o agent
+      go build -ldflags "-s -w" -o agent ./cmd/agent
       cp agent $SNAPCRAFT_PART_INSTALL/grafana-agent
     stage:
       - grafana-agent
