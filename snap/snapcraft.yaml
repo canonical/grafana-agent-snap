@@ -11,12 +11,20 @@ description: |
   logs, and trace data to the opinionated Grafana observability stack.
 base: core22
 grade: stable
-confinement: classic
+confinement: strict
 compression: lzo
 
 apps:
   grafana-agent:
+    daemon: simple
     command: grafana-agent
+    plugs:
+    - network-bind
+    - time-control
+    - hardware-observe
+    - mount-observe
+    - network-observe
+    - system-observe
 
 architectures:
   - build-on: amd64
@@ -41,3 +49,7 @@ parts:
       cp agent $SNAPCRAFT_PART_INSTALL/grafana-agent
     stage:
       - grafana-agent
+
+layout:
+  /etc/grafana-agent.yaml:
+    bind-file: $SNAP_DATA/etc/grafana-agent.yaml
