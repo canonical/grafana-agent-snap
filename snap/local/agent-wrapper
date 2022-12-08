@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec "${SNAP}/agent" -config.file "$SNAP_DATA/etc/grafana-agent.yaml"

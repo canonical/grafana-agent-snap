@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+mkdir -p $SNAP_DATA/etc/
+
+if [ ! -f $SNAP_DATA/etc/grafana-agent.yaml ]
+then
+  cat <<EOF > $SNAP_DATA/etc/grafana-agent.yaml
+integrations:
+  agent:
+    enabled: true
+  node_exporter:
+    enabled: true
+EOF
+fi
+
