@@ -17,7 +17,7 @@ compression: lzo
 apps:
   grafana-agent:
     daemon: simple 
-    command: agent-wrapper 
+    command: agent-wrapper
     install-mode: disable
     restart-condition: on-failure
     plugs:
@@ -31,6 +31,12 @@ architectures:
   - build-on: amd64
 
 parts:
+  config:
+    plugin: dump
+    source: ./snap/local
+    source-type: local
+    override-build: |
+      cp agent-wrapper $CRAFT_PART_INSTALL/
   grafana-agent:
     plugin: go
     source: https://github.com/grafana/agent
@@ -47,6 +53,5 @@ parts:
       - GOFLAGS: "-mod=readonly"
     override-build: |
       make agent agentctl
-      cp build/agent $CRAFT_PART_INSTALL/agent
-      cp build/agentctl $CRAFT_PART_INSTALL/agentctl
-      cp agent-wrapper $CRAFT_PART_INSTALL/agent-wrapper
+      cp build/agent $CRAFT_PART_INSTALL/
+      cp build/agentctl $CRAFT_PART_INSTALL/
