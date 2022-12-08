@@ -1,5 +1,5 @@
 name: grafana-agent
-version: '0.25.1'
+version: '0.29.0'
 summary: A telemetry collector for sending metrics, logs, and trace data
 license: Apache-2.0
 contact: simon.aronsson@canonical.com
@@ -16,22 +16,19 @@ compression: lzo
 
 apps:
   grafana-agent:
-    daemon: simple
-    command: grafana-agent
+    daemon: simple 
+    command: agent-wrapper 
+    install-mode: disable
+    restart-condition: on-failure
     plugs:
-    - network-bind
-    - time-control
-    - hardware-observe
-    - mount-observe
-    - network-observe
-    - system-observe
-
+      - network-bind
+      - time-control
+      - hardware-observe
+      - mount-observe
+      - network-observe
+      - system-observe
 architectures:
   - build-on: amd64
-  - build-on: armhf
-  - build-on: arm64
-  - build-on: s390x
-  - build-on: ppc64el
 
 parts:
   grafana-agent:
@@ -39,17 +36,17 @@ parts:
     source: https://github.com/grafana/agent
     source-type: git
     source-tag: "v$SNAPCRAFT_PROJECT_VERSION"
-    build-snaps: [go]
+    build-packages:
+      - build-essential
+    stage-packages:
+      - libsystemd-dev
+      - libbpfcc-dev
+      - bpfcc-tools
     build-environment:
-      - CGO_ENABLED: "0"
+      - USE_CONTAINER: 0
       - GOFLAGS: "-mod=readonly"
     override-build: |
-      go mod download
-      go build -ldflags "-s -w" -o agent ./cmd/agent
-      cp agent $SNAPCRAFT_PART_INSTALL/grafana-agent
-    stage:
-      - grafana-agent
-
-layout:
-  /etc/grafana-agent.yaml:
-    bind-file: $SNAP_DATA/etc/grafana-agent.yaml
+      make agent agentctl
+      cp build/agent $CRAFT_PART_INSTALL/agent
+      cp build/agentctl $CRAFT_PART_INSTALL/agentctl
+      cp agent-wrapper $CRAFT_PART_INSTALL/agent-wrapper
