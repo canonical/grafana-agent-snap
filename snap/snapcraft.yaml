@@ -59,9 +59,12 @@ parts:
     build-packages:
       - build-essential
       - golang
-    stage-packages:
       - libsystemd-dev
       - libbpfcc-dev
+      - bpfcc-tools
+    stage-packages:
+      - libsystemd0
+      - libbpfcc
       - bpfcc-tools
     build-environment:
       - USE_CONTAINER: 0
