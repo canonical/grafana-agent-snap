@@ -14,6 +14,12 @@ grade: stable
 confinement: strict
 compression: lzo
 
+plugs:
+  config-file:
+    interface: system-files
+    read:
+      - /etc/grafana-agent.yaml
+
 apps:
   grafana-agent:
     daemon: simple 
@@ -27,6 +33,7 @@ apps:
       - mount-observe
       - network-observe
       - system-observe
+      - config-file
 architectures:
   - build-on: amd64
 
@@ -44,6 +51,7 @@ parts:
     source-tag: "v$SNAPCRAFT_PROJECT_VERSION"
     build-packages:
       - build-essential
+      - golang
     stage-packages:
       - libsystemd-dev
       - libbpfcc-dev

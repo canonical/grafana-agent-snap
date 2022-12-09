@@ -1,3 +1,12 @@
 #!/bin/sh
 
-exec "${SNAP}/agent" -config.file "$SNAP_DATA/etc/grafana-agent.yaml"
+IS_CONNECTED=$(snapctl is-connected config-file; echo $?)
+
+if [ "${IS_CONNECTED}" = "0" -a -r /etc/grafana-agent.yaml ]
+then
+  echo "Launched with config from the host filesystem" | systemd-cat
+  exec "${SNAP}/agent" -config.file "/etc/grafana-agent.yaml"
+else
+  echo "Launched with minimal default config from the snap" | systemd-cat
+  exec "${SNAP}/agent" -config.file "$SNAP_DATA/etc/grafana-agent.yaml"
+fi
