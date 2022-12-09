@@ -45,7 +45,7 @@ architectures:
   - build-on: amd64
 
 parts:
-  config:
+  wrapper:
     plugin: dump
     source: ./snap/local
     source-type: local
