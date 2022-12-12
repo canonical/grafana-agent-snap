@@ -24,7 +24,10 @@ plugs:
     read:
       - /proc/mdstat
       - /proc/schedstat
-      - /proc/sys/kernel/random
+      - /proc/sys/kernel/random/write_wakeup_threshold
+      - /proc/sys/kernel/random/read_wakeup_threshold
+      - /proc/sys/kernel/random/poolsize
+      - /proc/sys/kernel/random/urandom_min_reseed_secs
 
 apps:
   grafana-agent:
@@ -39,6 +42,7 @@ apps:
       - mount-observe
       - network-observe
       - system-observe
+      - log-observe
       - config-file
       - telemetry
 architectures:
