@@ -15,15 +15,13 @@ confinement: strict
 compression: lzo
 
 plugs:
-  config-file:
+  etc-grafana-agent:
     interface: system-files
     read:
       - /etc/grafana-agent.yaml
-  telemetry:
+  proc-sys-kernel-random:
     interface: system-files
     read:
-      - /proc/mdstat
-      - /proc/schedstat
       - /proc/sys/kernel/random/write_wakeup_threshold
       - /proc/sys/kernel/random/read_wakeup_threshold
       - /proc/sys/kernel/random/poolsize
@@ -43,8 +41,8 @@ apps:
       - network-observe
       - system-observe
       - log-observe
-      - config-file
-      - telemetry
+      - etc-grafana-agent
+      - proc-sys-kernel-random
 architectures:
   - build-on: amd64
 
