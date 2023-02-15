@@ -1,6 +1,6 @@
 #!/bin/sh
 
-IS_CONNECTED=$(snapctl is-connected config-file; echo $?)
+IS_CONNECTED=$(snapctl is-connected etc-grafana-agent; echo $?)
 
 if [ "${IS_CONNECTED}" = "0" -a -r /etc/grafana-agent.yaml ]
 then
