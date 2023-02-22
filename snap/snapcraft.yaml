@@ -19,6 +19,10 @@ plugs:
     interface: system-files
     read:
       - /etc/grafana-agent.yaml
+  logs:
+    interface: content
+    target: $SNAP/shared-logs
+
   proc-sys-kernel-random:
     interface: system-files
     read:
