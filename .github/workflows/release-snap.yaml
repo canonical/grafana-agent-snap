@@ -1,0 +1,20 @@
+name: Release Snap
+
+on:
+  push:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo snap install --classic --channel edge snapcraft
+      - name: Build Snap
+        run: snapcraft pack --output grafana-agent.snap
+      - name: Upload and Publish Snap
+        run: snapcraft upload --release edge grafana-agent.snap
+
+        
+
