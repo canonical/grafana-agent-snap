@@ -2,7 +2,8 @@ name: Release Snap
 
 on:
   push:
-    - main
+    branches:
+      - main
 
 jobs:
   build:
