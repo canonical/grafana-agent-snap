@@ -1,4 +1,4 @@
-name: Promote Charm
+name: Promote Snap
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ env:
 
 jobs:
   promote:
-    name: Promote Charm
+    name: Promote Snap
     runs-on: ubuntu-latest
     steps:
       - name: Set target channel
