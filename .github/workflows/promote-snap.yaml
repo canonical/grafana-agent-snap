@@ -19,6 +19,8 @@ jobs:
     name: Promote Snap
     runs-on: ubuntu-latest
     steps:
+      - name: Install dependencies
+        run: sudo snap install --classic --channel edge snapcraft
       - name: Set target channel
         env:
           PROMOTE_FROM: ${{ github.event.inputs.promotion }}
