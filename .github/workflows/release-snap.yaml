@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
