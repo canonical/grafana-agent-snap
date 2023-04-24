@@ -1,19 +1,16 @@
 name: grafana-agent
-version: '0.29.0'
+version: '0.32.1'
 summary: A telemetry collector for sending metrics, logs, and trace data
 license: Apache-2.0
 contact: simon.aronsson@canonical.com
 issues: https://github.com/simskij/grafana-agent/issues
 source-code: https://github.com/simskij/grafana-agent
 website: https://grafana.com
-description: |
-  Grafana Agent is a telemetry collector for sending metrics, 
-  logs, and trace data to the opinionated Grafana observability stack.
+description: "Grafana Agent is a telemetry collector for sending metrics, \nlogs, and trace data to the opinionated Grafana observability stack.\n"
 base: core22
 grade: stable
 confinement: strict
 compression: lzo
-
 plugs:
   etc-grafana-agent:
     interface: system-files
@@ -22,7 +19,6 @@ plugs:
   logs:
     interface: content
     target: $SNAP/shared-logs
-
   proc-sys-kernel-random:
     interface: system-files
     read:
@@ -30,10 +26,9 @@ plugs:
       - /proc/sys/kernel/random/read_wakeup_threshold
       - /proc/sys/kernel/random/poolsize
       - /proc/sys/kernel/random/urandom_min_reseed_secs
-
 apps:
   grafana-agent:
-    daemon: simple 
+    daemon: simple
     command: agent-wrapper
     install-mode: disable
     restart-condition: on-failure
@@ -49,7 +44,6 @@ apps:
       - proc-sys-kernel-random
 architectures:
   - build-on: amd64
-
 parts:
   wrapper:
     plugin: dump
@@ -61,7 +55,7 @@ parts:
     plugin: go
     source: https://github.com/grafana/agent
     source-type: git
-    source-tag: "v$SNAPCRAFT_PROJECT_VERSION"
+    source-tag: "v0.32.1"
     build-packages:
       - build-essential
       - golang
