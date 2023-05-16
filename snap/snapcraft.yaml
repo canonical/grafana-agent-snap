@@ -56,9 +56,10 @@ parts:
     source: https://github.com/grafana/agent
     source-type: git
     source-tag: "v0.33.1"
+    build-snaps:
+      - go
     build-packages:
       - build-essential
-      - golang
       - libsystemd-dev
       - libbpfcc-dev
       - bpfcc-tools
@@ -71,5 +72,5 @@ parts:
       - GOFLAGS: "-mod=readonly"
     override-build: |
       make agent agentctl
-      cp build/agent $CRAFT_PART_INSTALL/
-      cp build/agentctl $CRAFT_PART_INSTALL/
+      cp build/grafana-agent $CRAFT_PART_INSTALL/agent
+      cp build/grafana-agentctl $CRAFT_PART_INSTALL/agentctl
