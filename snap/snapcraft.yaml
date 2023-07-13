@@ -1,5 +1,5 @@
 name: grafana-agent
-version: '0.33.1'
+version: '0.34.3'
 summary: A telemetry collector for sending metrics, logs, and trace data
 license: Apache-2.0
 contact: simon.aronsson@canonical.com
@@ -55,7 +55,7 @@ parts:
     plugin: go
     source: https://github.com/grafana/agent
     source-type: git
-    source-tag: "v0.33.1"
+    source-tag: "v0.34.3"
     build-snaps:
       - go
     build-packages:
