@@ -3,8 +3,8 @@ version: '0.35.2'
 summary: A telemetry collector for sending metrics, logs, and trace data
 license: Apache-2.0
 contact: simon.aronsson@canonical.com
-issues: https://github.com/simskij/grafana-agent/issues
-source-code: https://github.com/simskij/grafana-agent
+issues: https://github.com/canonical/grafana-agent-snap/issues
+source-code: https://github.com/canonical/grafana-agent-snap
 website: https://grafana.com
 description: "Grafana Agent is a telemetry collector for sending metrics, \nlogs, and trace data to the opinionated Grafana observability stack.\n"
 base: core22
