@@ -9,16 +9,7 @@
 <p align="center"><b>This is the snap for Grafana Agent</b>, <i>“Grafana Agent is a telemetry collector for sending metrics, logs, and trace data to the opinionated Grafana observability stack”</i>. It works on Ubuntu, Fedora, Debian, and other major Linux
 distributions.</p>
 
-<!-- Uncomment and modify this when you are provided a build status badge
-<p align="center">
-<a href="https://snapcraft.io/grafana-agent">
-  <img alt="enpass" src="https://snapcraft.io/grafana-agent/badge.svg" />
-</a>
-<a href="https://snapcraft.io/grafana-agent">
-  <img alt="enpass" src="https://snapcraft.io/grafana-agent/trending.svg?name=0" />
-</a>
-</p>
--->
+<p align="center"><a href="https://snapcraft.io/grafana-agent"><img src="https://snapcraft.io/grafana-agent/badge.svg" alt="grafana-agent badge"/><a/></p>
 
 <p align="center">Published for <img src="https://raw.githubusercontent.com/anythingcodes/slack-emoji-for-techies/gh-pages/emoji/tux.png" align="top" width="24" /> with 💝 by Snapcrafters</p>
 
