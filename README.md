@@ -4,6 +4,8 @@
   Grafana Agent
 </h1>
 
+<p align="center"><a href="https://github.com/canonical/grafana-agent-snap/actions/workflows/release-snap.yaml"><img src="https://github.com/canonical/grafana-agent-snap/actions/workflows/release-snap.yaml/badge.svg"></a></p>
+
 <p align="center"><b>This is the snap for Grafana Agent</b>, <i>“Grafana Agent is a telemetry collector for sending metrics, logs, and trace data to the opinionated Grafana observability stack”</i>. It works on Ubuntu, Fedora, Debian, and other major Linux
 distributions.</p>
 
