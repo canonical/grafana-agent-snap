@@ -69,7 +69,7 @@ parts:
       - bpfcc-tools
     build-environment:
       - USE_CONTAINER: 0
-      - GOFLAGS: "-mod=readonly"
+      - GOFLAGS: "-mod=readonly -tags=promtail_journal_enabled"
     override-build: |
       make agent agentctl
       cp build/grafana-agent $CRAFT_PART_INSTALL/agent
