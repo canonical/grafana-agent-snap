@@ -70,10 +70,11 @@ parts:
       - libsystemd0
       - libbpfcc
       - bpfcc-tools
-    build-environment:
-      - USE_CONTAINER: 0
-      - GOFLAGS: "-mod=readonly"
     override-build: |
+      export USE_CONTAINER=0
+      export GOFLAGS="-mod=readonly"
+      
       make agent agentctl
+      
       cp build/grafana-agent $CRAFT_PART_INSTALL/agent
       cp build/grafana-agentctl $CRAFT_PART_INSTALL/agentctl
