@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - snap/**
-
+  workflow_dispatch: {}
 
 env:
   SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
@@ -26,10 +26,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo snap install --classic --channel edge snapcraft
+          
+      - name: Build Snap (remote)
+        run: snapcraft remote-build --launchpad-accept-public-upload
 
-      - name: Build Snap
-        run: snapcraft pack --output grafana-agent.snap
+      - name: Upload and Publish amd64 Snap
+        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
 
-      - name: Upload and Publish Snap
-        run: snapcraft upload --release edge grafana-agent.snap
-
+      - name: Upload and Publish arm64 Snap
+        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
