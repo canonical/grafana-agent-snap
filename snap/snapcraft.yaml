@@ -1,5 +1,5 @@
 name: grafana-agent
-version: '0.39.2'
+version: '0.40.3'
 summary: A telemetry collector for sending metrics, logs, and trace data
 license: Apache-2.0
 contact: simon.aronsson@canonical.com
@@ -42,11 +42,9 @@ apps:
       - log-observe
       - etc-grafana-agent
       - proc-sys-kernel-random
-
 architectures:
   - build-on: amd64
   - build-on: arm64
-
 parts:
   wrapper:
     plugin: dump
@@ -58,7 +56,7 @@ parts:
     plugin: go
     source: https://github.com/grafana/agent
     source-type: git
-    source-tag: "v0.39.2"
+    source-tag: "v0.40.3"
     build-snaps:
       - go
     build-packages:
@@ -73,8 +71,8 @@ parts:
     override-build: |
       export USE_CONTAINER=0
       export GOFLAGS="-mod=readonly -tags=promtail_journal_enabled"
-      
+
       make agent agentctl
-      
+
       cp build/grafana-agent $CRAFT_PART_INSTALL/agent
       cp build/grafana-agentctl $CRAFT_PART_INSTALL/agentctl
