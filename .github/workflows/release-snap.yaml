@@ -36,10 +36,6 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github Actions"
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 120
-
       - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
 
