@@ -37,9 +37,8 @@ jobs:
       - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
 
-      # DEBUG: Temporarily disable these during debugging
-#      - name: Upload and Publish amd64 Snap
-#        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
-#
-#      - name: Upload and Publish arm64 Snap
-#        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
+      - name: Upload and Publish amd64 Snap
+        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
+
+      - name: Upload and Publish arm64 Snap
+        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
