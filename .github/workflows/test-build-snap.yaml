@@ -1,0 +1,36 @@
+# Build the snap on pull_request to ensure the snap is buildable before merge to main
+name: Test Build Snap
+
+on:
+  pull_request:
+
+env:
+  SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+  LAUNCHPAD_TOKEN: ${{ secrets.LAUNCHPAD_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          # snapcraft remote-build requires a full clone
+          fetch-depth: 0
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@v0.1.1
+        with:
+          channel: latest/stable
+
+      - name: Install dependencies
+        run: |
+          sudo snap install --classic --channel edge snapcraft
+          # Setup Launchpad credentials
+          mkdir -p ~/.local/share/snapcraft
+          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/launchpad-credentials
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "Github Actions"
+
+      - name: Build Snap (remote)
+        run: snapcraft remote-build --launchpad-accept-public-upload
