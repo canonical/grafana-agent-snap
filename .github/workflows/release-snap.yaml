@@ -2,10 +2,8 @@ name: Release Snap
 
 on:
   push:
-    # DEBUG: Remove debugging branch when done
     branches:
       - main
-      - openg-2388
   workflow_dispatch: {}
 
 env:
