@@ -29,12 +29,18 @@ jobs:
           mkdir -p ~/.local/share/snapcraft/provider/launchpad
           echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/provider/launchpad/credentials
           git config --global user.email "github-actions@github.com"
-          git config --global user.name "Github Actions"          
+          git config --global user.name "Github Actions"
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 120
+
       - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
 
-      - name: Upload and Publish amd64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
-
-      - name: Upload and Publish arm64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
+      # DEBUG: Temporarily disable these during debugging
+#      - name: Upload and Publish amd64 Snap
+#        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
+#
+#      - name: Upload and Publish arm64 Snap
+#        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
