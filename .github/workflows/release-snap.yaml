@@ -42,3 +42,15 @@ jobs:
 
       - name: Upload and Publish arm64 Snap
         run: snapcraft upload --release edge grafana-agent_*_arm64.snap
+
+      - name: Convert to Classic Snap
+        run: ./make-classic.sh
+
+      - name: Build Classic Snap (remote)
+        run: snapcraft remote-build --launchpad-accept-public-upload
+
+      - name: Upload and Publish Classic amd64 Snap
+        run: snapcraft upload --release classic/edge grafana-agent_*_amd64.snap
+
+      - name: Upload and Publish Classic arm64 Snap
+        run: snapcraft upload --release classic/edge grafana-agent_*_arm64.snap
