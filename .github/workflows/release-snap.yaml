@@ -1,3 +1,7 @@
+# Build and release the snap on merge to main
+#
+# test-build-snap.yaml duplicates some of this workflow's logic.  If modifying this workflow, ensure
+# that test-build-snap.yaml is also updated
 name: Release Snap
 
 on:

@@ -1,4 +1,7 @@
 # Build the snap on pull_request to ensure the snap is buildable before merge to main
+#
+# This workflow duplicates some of the logic from release-snap.yaml.  If modifying this workflow,
+# ensure that release-snap.yaml is also updated
 name: Test Build Snap
 
 on:
