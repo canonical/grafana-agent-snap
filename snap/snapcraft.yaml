@@ -7,9 +7,10 @@ issues: https://github.com/canonical/grafana-agent-snap/issues
 source-code: https://github.com/canonical/grafana-agent-snap
 website: https://grafana.com
 description: "Grafana Agent is a telemetry collector for sending metrics, \nlogs, and trace data to the opinionated Grafana observability stack.\n"
-base: core22
+base: core20
+build-base: core20
 grade: stable
-confinement: strict
+confinement: classic
 compression: lzo
 plugs:
   etc-grafana-agent:
@@ -42,9 +43,11 @@ apps:
       - log-observe
       - etc-grafana-agent
       - proc-sys-kernel-random
-architectures:
-  - build-on: amd64
-  - build-on: arm64
+platforms:
+  amd64:
+    build-on: amd64
+  arm64:
+    build-on: arm64
 parts:
   wrapper:
     plugin: dump
