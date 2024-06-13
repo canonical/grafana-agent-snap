@@ -31,6 +31,8 @@ jobs:
           # Setup Launchpad credentials
           mkdir -p ~/.local/share/snapcraft
           echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/launchpad-credentials
+          mkdir -p ~/.local/share/snapcraft/provider/launchpad
+          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/provider/launchpad/credentials
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github Actions"
 
