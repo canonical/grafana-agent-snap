@@ -1,14 +1,11 @@
-# Build and release the snap on merge to main
+# Build the snap on pull_request to ensure the snap is buildable before merge to main
 #
-# test-build-snap.yaml duplicates some of this workflow's logic.  If modifying this workflow, ensure
-# that test-build-snap.yaml is also updated
-name: Release Snap
+# This workflow duplicates some of the logic from release-snap.yaml.  If modifying this workflow,
+# ensure that release-snap.yaml is also updated
+name: Test Build Snap
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch: {}
+  pull_request:
 
 env:
   SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
@@ -40,9 +37,3 @@ jobs:
 
       - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
-
-      - name: Upload and Publish amd64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
-
-      - name: Upload and Publish arm64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
