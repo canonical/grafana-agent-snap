@@ -35,8 +35,13 @@ jobs:
           # Setup Launchpad credentials
           mkdir -p ~/.local/share/snapcraft
           echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/launchpad-credentials
+          mkdir -p ~/.local/share/snapcraft/provider/launchpad
+          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/provider/launchpad/credentials
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github Actions"
+
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4
 
       - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
@@ -46,3 +51,15 @@ jobs:
 
       - name: Upload and Publish arm64 Snap
         run: snapcraft upload --release edge grafana-agent_*_arm64.snap
+
+      - name: Convert to Classic Snap
+        run: ./make-classic.sh
+
+      - name: Build Classic Snap (remote)
+        run: snapcraft remote-build --launchpad-accept-public-upload
+
+      - name: Upload and Publish Classic amd64 Snap
+        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_amd64.snap
+
+      - name: Upload and Publish Classic arm64 Snap
+        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_arm64.snap
