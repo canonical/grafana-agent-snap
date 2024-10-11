@@ -43,8 +43,14 @@ jobs:
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4
 
-      - name: Build Snap
-        run: snapcraft pack
+      - name: Build Snap (amd64)
+        run: snapcraft pack --build-for=amd64
+
+      - name: Clean up some disk space
+        run: snapcraft clean
+
+      - name: Build Snap (arm64)
+        run: snapcraft pack --build-for=arm64
 
       - name: Upload and Publish amd64 Snap
         run: snapcraft upload --release edge grafana-agent_*_amd64.snap
@@ -55,8 +61,14 @@ jobs:
       - name: Convert to Classic Snap
         run: ./make-classic.sh
 
-      - name: Build Classic Snap (remote)
-        run: snapcraft pack
+      - name: Build Classic Snap (amd64)
+        run: snapcraft pack --build-for=amd64
+
+      - name: Clean up some disk space
+        run: snapcraft clean
+
+      - name: Build Classic Snap (arm64)
+        run: snapcraft pack --build-for=arm64
 
       - name: Upload and Publish Classic amd64 Snap
         run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_amd64.snap
