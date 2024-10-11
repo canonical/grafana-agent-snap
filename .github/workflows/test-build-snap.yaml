@@ -35,5 +35,5 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github Actions"
 
-      - name: Build Snap (remote)
-        run: snapcraft remote-build --launchpad-accept-public-upload
+      - name: Build Snap
+        run: snapcraft pack

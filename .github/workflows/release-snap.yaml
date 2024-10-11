@@ -43,8 +43,8 @@ jobs:
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4
 
-      - name: Build Snap (remote)
-        run: snapcraft remote-build --launchpad-accept-public-upload
+      - name: Build Snap
+        run: snapcraft pack
 
       - name: Upload and Publish amd64 Snap
         run: snapcraft upload --release edge grafana-agent_*_amd64.snap
@@ -56,7 +56,7 @@ jobs:
         run: ./make-classic.sh
 
       - name: Build Classic Snap (remote)
-        run: snapcraft remote-build --launchpad-accept-public-upload
+        run: snapcraft pack
 
       - name: Upload and Publish Classic amd64 Snap
         run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_amd64.snap
