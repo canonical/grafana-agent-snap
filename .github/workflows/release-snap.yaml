@@ -16,6 +16,13 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        platform:
+          - amd64
+          - arm64
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -29,35 +36,17 @@ jobs:
         run: |
           sudo snap install --classic --channel edge snapcraft
 
-      - name: Build Snap (amd64)
-        run: snapcraft pack --build-for=amd64
+      - name: Build Snap (${{ matrix.platform }})
+        run: snapcraft pack --build-for=${{ matrix.platform }}
 
-      - name: Clean up some disk space
-        run: snapcraft clean
-
-      - name: Build Snap (arm64)
-        run: snapcraft pack --build-for=arm64
-
-      - name: Upload and Publish amd64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
-
-      - name: Upload and Publish arm64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
+      - name: Upload and Publish ${{ matrix.platform }} Snap
+        run: snapcraft upload --release edge grafana-agent_*_${{ matrix.platform }}.snap
 
       - name: Convert to Classic Snap
         run: ./make-classic.sh
 
-      - name: Build Classic Snap (amd64)
-        run: snapcraft pack --build-for=amd64
+      - name: Build Classic Snap (${{ matrix.platform }})
+        run: snapcraft pack --build-for=${{ matrix.platform }}
 
-      - name: Clean up some disk space
-        run: snapcraft clean
-
-      - name: Build Classic Snap (arm64)
-        run: snapcraft pack --build-for=arm64
-
-      - name: Upload and Publish Classic amd64 Snap
-        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_amd64.snap
-
-      - name: Upload and Publish Classic arm64 Snap
-        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_arm64.snap
+      - name: Upload and Publish Classic ${{ matrix.platform }} Snap
+        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_${{ matrix.platform }}.snap
