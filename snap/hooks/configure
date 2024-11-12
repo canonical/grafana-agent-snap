@@ -1,0 +1,31 @@
+#!/bin/sh -e
+
+DEFAULT_REPORTING_ENABLED="1"
+
+get_reporting_enabled() {
+  value="$(snapctl get reporting_enabled)"
+  if [ -z "$value" ]; then
+    value="$DEFAULT_REPORTING_ENABLED"
+    set_reporting_enabled $value
+  fi
+  echo "$value"
+}
+
+set_reporting_enabled() {
+  snapctl set reporting_enabled="$1"
+}
+
+handle_reporting_enabled() {
+    reporting_enabled="$(get_reporting_enabled)"
+
+    # Validate
+    if ! expr "$reporting_enabled" : '^[0-1]$' > /dev/null; then
+        echo "\"$reporting_enabled\" must be either 0 (false) or 1 (true)" >&2
+        return 1
+    fi
+    
+    set_reporting_enabled "$reporting_enabled"
+    snapctl restart grafana-agent
+}
+
+handle_reporting_enabled
