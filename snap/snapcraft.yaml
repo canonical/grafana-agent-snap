@@ -58,7 +58,7 @@ parts:
     source-type: git
     source-tag: "v0.40.4"
     build-snaps:
-      - go
+      - go/1.22/stable
     build-packages:
       - build-essential
       - libsystemd-dev
