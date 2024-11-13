@@ -3,7 +3,7 @@
 DEFAULT_REPORTING_ENABLED="1"
 
 get_reporting_enabled() {
-  value="$(snapctl get reporting_enabled)"
+  value="$(snapctl get reporting-enabled)"
   if [ -z "$value" ]; then
     value="$DEFAULT_REPORTING_ENABLED"
     set_reporting_enabled $value
@@ -12,7 +12,7 @@ get_reporting_enabled() {
 }
 
 set_reporting_enabled() {
-  snapctl set reporting_enabled="$1"
+  snapctl set reporting-enabled="$1"
 }
 
 handle_reporting_enabled() {

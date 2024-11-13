@@ -11,10 +11,12 @@ else
   CONFIG_FILE="$SNAP_DATA/etc/grafana-agent.yaml"
 fi
 
-if [ "$(snapctl get reporting_enabled)" = "0" ]
+if [ "$(snapctl get reporting-enabled)" = "0" ]
 then
+  echo "Launched with reporting disabled" | systemd-cat
   REPORTING_ARG="-disable-reporting"
 else
+  echo "Launched with reporting enabled" | systemd-cat
   REPORTING_ARG=""
 fi
 
