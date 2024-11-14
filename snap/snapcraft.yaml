@@ -43,10 +43,8 @@ apps:
       - etc-grafana-agent
       - proc-sys-kernel-random
 architectures:
-  - build-on: [amd64]
-  - build-on: [amd64, arm64]
-    build-for: [arm64]
-
+  - build-on: amd64
+  - build-on: arm64
 parts:
   wrapper:
     plugin: dump
@@ -60,24 +58,12 @@ parts:
     source-type: git
     source-tag: "v0.40.4"
     build-snaps:
-      - go
+      - go/1.22/stable
     build-packages:
       - build-essential
       - libsystemd-dev
       - libbpfcc-dev
       - bpfcc-tools
-      - on amd64 to arm64:
-        - gcc-aarch64-linux-gnu
-        - linux-libc-dev-arm64-cross
-        - libc6-dev-arm64-cross
-    build-environment:
-      - to amd64:
-        - GOOS: linux
-        - GOARCH: amd64
-      - to arm64:
-        - GOOS: linux
-        - GOARCH: arm64
-        - CC: /usr/bin/aarch64-linux-gnu-gcc
     stage-packages:
       - libsystemd0
       - libbpfcc

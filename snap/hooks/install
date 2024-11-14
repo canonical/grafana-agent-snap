@@ -1,10 +1,10 @@
 #!/bin/sh -e
 
-mkdir -p $SNAP_DATA/etc/
+mkdir -p "${SNAP_DATA}/etc/"
 
-if [ ! -f $SNAP_DATA/etc/grafana-agent.yaml ]
+if [ ! -f "${SNAP_DATA}/etc/grafana-agent.yaml" ]
 then
-  cat <<EOF > $SNAP_DATA/etc/grafana-agent.yaml
+  cat <<EOF > "${SNAP_DATA}/etc/grafana-agent.yaml"
 integrations:
   agent:
     enabled: true
@@ -12,4 +12,3 @@ integrations:
     enabled: true
 EOF
 fi
-
