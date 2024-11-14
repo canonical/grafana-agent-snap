@@ -9,4 +9,4 @@ else
   REPORTING_ARG=""
 fi
 
-exec "${SNAP}/agent" -config.expand-env -config.file "${CONFIG_FILE}" "${REPORTING_ARG}"
+exec "${SNAP}/agent" -config.expand-env -config.file "/etc/grafana-agent.yaml" "${REPORTING_ARG}"
