@@ -16,7 +16,7 @@ env:
 
 jobs:
   build:
-    name: Build snap (strict)
+    name: Build snap (${{ matrix.confinement }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
