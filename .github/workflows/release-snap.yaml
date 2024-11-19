@@ -16,7 +16,17 @@ env:
 
 jobs:
   build:
+    name: Build snap (${{ matrix.confinement }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        confinement: [ "strict", "classic" ]
+        include:
+          - confinement: "strict"
+            channel: "latest/edge"
+          - confinement: "classic"
+            channel: "0.40-classic/edge"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -43,23 +53,15 @@ jobs:
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4
 
+      - if: ${{ matrix.confinement == 'classic' }}
+        name: Convert to Classic Snap
+        run: ./make-classic.sh
+
       - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
 
       - name: Upload and Publish amd64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
+        run: snapcraft upload --release ${{ matrix.channel }} grafana-agent_*_amd64.snap
 
       - name: Upload and Publish arm64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
-
-      - name: Convert to Classic Snap
-        run: ./make-classic.sh
-
-      - name: Build Classic Snap (remote)
-        run: snapcraft remote-build --launchpad-accept-public-upload
-
-      - name: Upload and Publish Classic amd64 Snap
-        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_amd64.snap
-
-      - name: Upload and Publish Classic arm64 Snap
-        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_arm64.snap
+        run: snapcraft upload --release ${{ matrix.channel }} grafana-agent_*_arm64.snap

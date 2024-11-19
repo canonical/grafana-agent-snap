@@ -5,7 +5,7 @@ license: Apache-2.0
 contact: simon.aronsson@canonical.com
 issues: https://github.com/canonical/grafana-agent-snap/issues
 source-code: https://github.com/canonical/grafana-agent-snap
-website: https://grafana.com
+website: https://grafana.com/oss/agent/
 description: "Grafana Agent is a telemetry collector for sending metrics, \nlogs, and trace data to the opinionated Grafana observability stack.\n"
 base: core22
 grade: stable

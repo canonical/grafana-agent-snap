@@ -13,7 +13,12 @@ env:
 
 jobs:
   build:
+    name: Build snap (${{ matrix.confinement }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        confinement: [ "strict", "classic" ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -34,6 +39,13 @@ jobs:
           echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/launchpad-credentials
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github Actions"
+
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4
+
+      - if: ${{ matrix.confinement == 'classic' }}
+        name: Convert to Classic Snap
+        run: ./make-classic.sh
 
       - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
