@@ -51,7 +51,7 @@ parts:
     source: ./snap/local
     source-type: local
     override-build: |
-      cp agent-wrapper.strict $CRAFT_PART_INSTALL/agent-wrapper
+      cp agent-wrapper $CRAFT_PART_INSTALL/
   grafana-agent:
     plugin: go
     source: https://github.com/grafana/agent
