@@ -15,44 +15,18 @@ env:
   LAUNCHPAD_TOKEN: ${{ secrets.LAUNCHPAD_TOKEN }}
 
 jobs:
-  build-strict:
+  build:
     name: Build snap (strict)
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          # snapcraft remote-build requires a full clone
-          fetch-depth: 0
-
-      - name: Setup LXD
-        uses: canonical/setup-lxd@v0.1.1
-        with:
-          channel: latest/stable
-
-      - name: Install dependencies
-        run: |
-          sudo snap install --classic --channel edge snapcraft
-          # Setup Launchpad credentials
-          mkdir -p ~/.local/share/snapcraft
-          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/launchpad-credentials
-          mkdir -p ~/.local/share/snapcraft/provider/launchpad
-          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/provider/launchpad/credentials
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "Github Actions"
-
-      - name: Build Snap (remote)
-        run: snapcraft remote-build --launchpad-accept-public-upload
-
-      - name: Upload and Publish amd64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_amd64.snap
-
-      - name: Upload and Publish arm64 Snap
-        run: snapcraft upload --release edge grafana-agent_*_arm64.snap
-
-  build-classic:
-    name: Build snap (classic)
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        confinement: [ "strict", "classic" ]
+        include:
+          - confinement: "strict"
+            channel: "latest/edge"
+          - confinement: "classic"
+            channel: "0.40-classic/edge"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -79,14 +53,15 @@ jobs:
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4
 
-      - name: Convert to Classic Snap
+      - if: ${{ matrix.confinement == 'classic' }}
+        name: Convert to Classic Snap
         run: ./make-classic.sh
 
-      - name: Build Classic Snap (remote)
+      - name: Build Snap (remote)
         run: snapcraft remote-build --launchpad-accept-public-upload
 
-      - name: Upload and Publish Classic amd64 Snap
-        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_amd64.snap
+      - name: Upload and Publish amd64 Snap
+        run: snapcraft upload --release ${{ matrix.channel }} grafana-agent_*_amd64.snap
 
-      - name: Upload and Publish Classic arm64 Snap
-        run: snapcraft upload --release 0.40-classic/edge grafana-agent_*_arm64.snap
+      - name: Upload and Publish arm64 Snap
+        run: snapcraft upload --release ${{ matrix.channel }} grafana-agent_*_arm64.snap
