@@ -9,39 +9,14 @@ website: https://grafana.com
 description: "Grafana Agent is a telemetry collector for sending metrics, \nlogs, and trace data to the opinionated Grafana observability stack.\n"
 base: core22
 grade: stable
-confinement: strict
+confinement: classic
 compression: lzo
-plugs:
-  etc-grafana-agent:
-    interface: system-files
-    read:
-      - /etc/grafana-agent.yaml
-  logs:
-    interface: content
-    target: $SNAP/shared-logs
-  proc-sys-kernel-random:
-    interface: system-files
-    read:
-      - /proc/sys/kernel/random/write_wakeup_threshold
-      - /proc/sys/kernel/random/read_wakeup_threshold
-      - /proc/sys/kernel/random/poolsize
-      - /proc/sys/kernel/random/urandom_min_reseed_secs
 apps:
   grafana-agent:
     daemon: simple
     command: agent-wrapper
     install-mode: disable
     restart-condition: on-failure
-    plugs:
-      - network-bind
-      - time-control
-      - hardware-observe
-      - mount-observe
-      - network-observe
-      - system-observe
-      - log-observe
-      - etc-grafana-agent
-      - proc-sys-kernel-random
 architectures:
   - build-on: amd64
   - build-on: arm64
@@ -51,7 +26,7 @@ parts:
     source: ./snap/local
     source-type: local
     override-build: |
-      cp agent-wrapper.strict $CRAFT_PART_INSTALL/agent-wrapper
+      cp agent-wrapper.classic $CRAFT_PART_INSTALL/agent-wrapper
   grafana-agent:
     plugin: go
     source: https://github.com/grafana/agent
@@ -76,3 +51,5 @@ parts:
 
       cp build/grafana-agent $CRAFT_PART_INSTALL/agent
       cp build/grafana-agentctl $CRAFT_PART_INSTALL/agentctl
+    build-attributes:
+      - enable-patchelf
