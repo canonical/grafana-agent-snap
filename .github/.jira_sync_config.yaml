@@ -1,14 +1,13 @@
 settings:
-  jira_project_key: "OPENG"
+  jira_project_key: "OBC"
   status_mapping:
     opened: Untriaged
     closed: done
     not_planned: rejected
-    
+
   components:
     - grafana-agent
-    - team-core
-      
+
   add_gh_comment: false
   sync_description: false
   sync_comments: false

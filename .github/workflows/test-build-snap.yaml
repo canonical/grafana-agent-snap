@@ -12,13 +12,12 @@ env:
 
 jobs:
   build:
+    name: Build snap (${{ matrix.confinement }})
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        platform:
-          - amd64
-          - arm64
+        confinement: [ "strict", "classic" ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -32,5 +31,12 @@ jobs:
         run: |
           sudo snap install --classic --channel edge snapcraft
 
-      - name: Build Snap (${{ matrix.platform }})
-        run: snapcraft pack --build-for=${{ matrix.platform }}
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4
+
+      - if: ${{ matrix.confinement == 'classic' }}
+        name: Convert to Classic Snap
+        run: ./make-classic.sh
+
+      - name: Build Snap (remote)
+        run: snapcraft remote-build --launchpad-accept-public-upload
