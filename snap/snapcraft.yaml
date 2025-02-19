@@ -42,6 +42,7 @@ apps:
       - log-observe
       - etc-grafana-agent
       - proc-sys-kernel-random
+      - home
 architectures:
   - build-on: amd64
   - build-on: arm64
