@@ -42,6 +42,9 @@ apps:
       - log-observe
       - etc-grafana-agent
       - proc-sys-kernel-random
+      # We use home plug since it has the dac_read_search capability enabled.
+      # without this, we may face this issue while reading logs in /var/log
+      # https://bugs.launchpad.net/snapd/+bug/2098780
       - home
 architectures:
   - build-on: amd64
