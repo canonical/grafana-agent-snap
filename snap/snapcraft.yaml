@@ -63,6 +63,8 @@ parts:
     source-tag: "v0.40.4"
     build-snaps:
       - go/1.22/stable
+    stage-snaps:
+      - yq/v4/stable
     build-packages:
       - build-essential
       - libsystemd-dev
