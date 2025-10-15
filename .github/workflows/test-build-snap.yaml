@@ -40,7 +40,8 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github Actions"
 
-      - name: yq - portable yaml processor
+      - if: ${{ matrix.confinement == 'classic' }}
+        name: yq - portable yaml processor
         uses: mikefarah/yq@v4
 
       - if: ${{ matrix.confinement == 'classic' }}
