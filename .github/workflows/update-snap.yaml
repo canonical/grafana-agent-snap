@@ -22,13 +22,13 @@ jobs:
           sudo snap install yq
 
       - id: latest-release
-        uses: pozetroninc/github-action-get-latest-release@v0.6.0
+        uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
           repository: grafana/agent
           excludes: prerelease, draft
 
       - name: Checkout the Snap source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           path: main
 
@@ -54,7 +54,7 @@ jobs:
 
       - name: Create a PR
         if: ${{ steps.check.outputs.release != '' }}
-        uses: peter-evans/create-pull-request@v4.2.3
+        uses: peter-evans/create-pull-request@v7
         with:
           path: main
           token: ${{ secrets.OBSERVABILITY_NOCTUA_TOKEN }}
