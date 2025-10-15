@@ -1,8 +1,10 @@
 # Build and release the snap on merge to main
-#
-# test-build-snap.yaml duplicates some of this workflow's logic.  If modifying this workflow, ensure
-# that test-build-snap.yaml is also updated
-name: Release Snap
+
+name: Release snaps
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 on:
   push:
@@ -13,7 +15,7 @@ on:
 jobs:
   build:
     name: Build and release snaps
-    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml
+    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml@main
     permissions:
       contents: write
     secrets: inherit

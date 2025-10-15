@@ -22,14 +22,14 @@ env:
 
 jobs:
   build:
-    name: Build snap (${{ matrix.confinement }}, ${{ matrix.build-for }})
+    name: ${{ matrix.build-for }}, ${{ matrix.confinement }} (${{ matrix.build-type }})
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         confinement: [ "strict", "classic" ]
-        runner: [ "ubuntu-latest", "Ubuntu_ARM64_4C_16G_03" ]
         build-for: [ "amd64", "arm64", "ppc64el", "s390x" ]
+        
         include:
           - confinement: "strict"
             channel: "latest/edge"
@@ -38,14 +38,27 @@ jobs:
 
           - runner: "ubuntu-latest"
             build-for: amd64
-          - runner: "ubuntu-latest"
-            build-for: ppc64el
-          - runner: "ubuntu-latest"
-            build-for: s390x
+            build-type: local
           - runner: "Ubuntu_ARM64_4C_16G_03"
             build-for: arm64
+            build-type: local
+          - runner: "ubuntu-latest"
+            build-for: ppc64el
+            build-type: remote
+          - runner: "ubuntu-latest"
+            build-for: s390x
+            build-type: remote
+          
     steps:
-      - name: Checkout repository
+      - if: ${{ matrix.build-type == 'remote' }}
+        name: Checkout repository (non-shallow clone)
+        uses: actions/checkout@v5
+        with:
+          # snapcraft remote-build requires a full clone
+          fetch-depth: 0
+      
+      - if: ${{ matrix.build-type == 'local' }}
+        name: Checkout repository (shallow clone)
         uses: actions/checkout@v5
 
       - name: Setup LXD
@@ -57,7 +70,7 @@ jobs:
         run: |
           sudo snap install --classic --channel edge snapcraft
       
-      - if: ${{ matrix.build-for == 'ppc64el' || matrix.build-for == 's390x' }}
+      - if: ${{ matrix.build-type == 'remote' }}
         name: Configure credentials for remote-build
         run: |
           # Setup Launchpad credentials (only needed for remote-build)
@@ -76,11 +89,11 @@ jobs:
         name: Convert to Classic Snap
         run: ./make-classic.sh
 
-      - if: ${{ matrix.build-for == 'amd64' || matrix.build-for == 'arm64' }}
+      - if: ${{ matrix.build-type == 'local' }}
         name: Build Snap (local)
         run: snapcraft pack
       
-      - if: ${{ matrix.build-for == 'ppc64el' || matrix.build-for == 's390x' }}
+      - if: ${{ matrix.build-type == 'remote' }}
         name: Build Snap (remote)
         run: snapcraft remote-build --build-for=${{ matrix.build-for }} --launchpad-accept-public-upload
       

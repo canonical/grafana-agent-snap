@@ -1,8 +1,10 @@
 # Build the snap on pull_request to ensure the snap is buildable before merge to main
-#
-# This workflow duplicates some of the logic from release-snap.yaml.  If modifying this workflow,
-# ensure that release-snap.yaml is also updated
-name: Test Build Snap
+
+name: Test snaps
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 on:
   pull_request:
@@ -10,7 +12,7 @@ on:
 jobs:
   build:
     name: Build snaps
-    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml
+    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml@main
     permissions:
       contents: write
     secrets: inherit
