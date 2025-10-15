@@ -10,80 +10,12 @@ on:
       - main
   workflow_dispatch: {}
 
-env:
-  SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-  LAUNCHPAD_TOKEN: ${{ secrets.LAUNCHPAD_TOKEN }}
-
 jobs:
   build:
-    name: Build snap (${{ matrix.confinement }}, ${{ matrix.build-for }})
-    runs-on: ${{ matrix.runner }}
-    strategy:
-      fail-fast: false
-      matrix:
-        confinement: [ "strict", "classic" ]
-        runner: [ "ubuntu-latest", "Ubuntu_ARM64_4C_16G_03" ]
-        build-for: [ "amd64", "arm64", "ppc64el", "s390x" ]
-        include:
-          - confinement: "strict"
-            channel: "latest/edge"
-          - confinement: "classic"
-            channel: "0.40-classic/edge"
-
-          - runner: "ubuntu-latest"
-            build-for: amd64
-          - runner: "ubuntu-latest"
-            build-for: ppc64el
-          - runner: "ubuntu-latest"
-            build-for: s390x
-          - runner: "Ubuntu_ARM64_4C_16G_03"
-            build-for: arm64
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Setup LXD
-        uses: canonical/setup-lxd@v0.1.3
-        with:
-          channel: latest/stable
-
-      - name: Install dependencies
-        run: |
-          sudo snap install --classic --channel edge snapcraft
-      
-      - if: ${{ matrix.build-for == 'ppc64el' || matrix.build-for == 's390x' }}
-        name: Configure credentials for remote-build
-        run: |
-          # Setup Launchpad credentials (only needed for remote-build)
-          mkdir -p ~/.local/share/snapcraft
-          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/launchpad-credentials
-          mkdir -p ~/.local/share/snapcraft/provider/launchpad
-          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/provider/launchpad/credentials
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "Github Actions"
-
-      - if: ${{ matrix.confinement == 'classic' }}
-        name: yq - portable yaml processor
-        uses: mikefarah/yq@v4
-      
-      - if: ${{ matrix.confinement == 'classic' }}
-        name: Convert to Classic Snap
-        run: ./make-classic.sh
-
-      - if: ${{ matrix.build-for == 'amd64' || matrix.build-for == 'arm64' }}
-        name: Build Snap (local)
-        run: snapcraft pack
-      
-      - if: ${{ matrix.build-for == 'ppc64el' || matrix.build-for == 's390x' }}
-        name: Build Snap (remote)
-        run: snapcraft remote-build --build-for=${{ matrix.build-for }} --launchpad-accept-public-upload
-      
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: grafana-agent-${{ matrix.confinement }}-${{ matrix.build-for }}-snap
-          path: "*.snap"
-
-      - name: Upload and Publish Snap
-        run: snapcraft upload --release ${{ matrix.channel }} grafana-agent_*.snap
-  
+    name: Build and release snaps
+    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml
+    permissions:
+      contents: write
+    secrets: inherit
+    with:
+      release: true
