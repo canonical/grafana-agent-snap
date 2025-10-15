@@ -22,14 +22,13 @@ env:
 
 jobs:
   build:
-    name: Build snap (${{ matrix.confinement }}, ${{ matrix.build-for }})
+    name: Build snap - ${{ matrix.build-type }} (${{ matrix.confinement }}, ${{ matrix.build-for }}) on ${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         confinement: [ "strict", "classic" ]
         runner: [ "ubuntu-latest", "Ubuntu_ARM64_4C_16G_03" ]
-        build-for: [ "amd64", "arm64", "ppc64el", "s390x" ]
         include:
           - confinement: "strict"
             channel: "latest/edge"
@@ -38,14 +37,27 @@ jobs:
 
           - runner: "ubuntu-latest"
             build-for: amd64
-          - runner: "ubuntu-latest"
-            build-for: ppc64el
-          - runner: "ubuntu-latest"
-            build-for: s390x
+            build-type: local
           - runner: "Ubuntu_ARM64_4C_16G_03"
             build-for: arm64
+            build-type: local
+          - runner: "ubuntu-latest"
+            build-for: ppc64el
+            build-type: remote
+          - runner: "ubuntu-latest"
+            build-for: s390x
+            build-type: remote
+          
     steps:
-      - name: Checkout repository
+      - if: ${{ matrix.build-for == 'ppc64el' || matrix.build-for == 's390x' }}
+        name: Checkout repository (non-shallow clone)
+        uses: actions/checkout@v5
+        with:
+          # snapcraft remote-build requires a full clone
+          fetch-depth: 0
+      
+      - if: ${{ matrix.build-for == 'amd64' || matrix.build-for == 'arm64' }}
+        name: Checkout repository (shallow clone)
         uses: actions/checkout@v5
 
       - name: Setup LXD
