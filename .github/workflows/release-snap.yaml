@@ -68,3 +68,6 @@ jobs:
 
       - name: Upload and Publish ppc64el Snap
         run: snapcraft upload --release ${{ matrix.channel }} grafana-agent_*_ppc64el.snap
+
+      - name: Upload and Publish s390x Snap
+        run: snapcraft upload --release ${{ matrix.channel }} grafana-agent_*_s390x.snap

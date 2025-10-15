@@ -7,7 +7,7 @@ issues: https://github.com/canonical/grafana-agent-snap/issues
 source-code: https://github.com/canonical/grafana-agent-snap
 website: https://grafana.com/oss/agent/
 description: "Grafana Agent is a telemetry collector for sending metrics, \nlogs, and trace data to the opinionated Grafana observability stack.\n"
-base: core22
+base: core24
 grade: stable
 confinement: strict
 compression: lzo
@@ -46,10 +46,11 @@ apps:
       # without this, we may face this issue while reading logs in /var/log
       # https://bugs.launchpad.net/snapd/+bug/2098780
       - home
-architectures:
-  - build-on: amd64
-  - build-on: arm64
-  - build-on: ppc64el
+platforms:
+  amd64:
+  arm64:
+  ppc64el:
+  s390x:
 parts:
   wrapper:
     plugin: dump
