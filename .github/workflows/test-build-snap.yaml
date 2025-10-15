@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     name: Build snaps
-    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml@main
+    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml@feature/fix-ci
     permissions:
       contents: write
     secrets: inherit
