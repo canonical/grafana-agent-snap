@@ -22,7 +22,7 @@ env:
 
 jobs:
   build:
-    name: Build snap - ${{ matrix.build-type }} (${{ matrix.confinement }}, ${{ matrix.build-for }}) on ${{ matrix.runner }}
+    name: ${{ matrix.build-for }}, ${{ matrix.confinement }} (${{ matrix.build-type }})
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
