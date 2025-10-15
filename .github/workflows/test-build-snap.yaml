@@ -7,45 +7,12 @@ name: Test Build Snap
 on:
   pull_request:
 
-env:
-  SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-  LAUNCHPAD_TOKEN: ${{ secrets.LAUNCHPAD_TOKEN }}
-
 jobs:
   build:
-    name: Build snap (${{ matrix.confinement }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        confinement: [ "strict", "classic" ]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          # snapcraft remote-build requires a full clone
-          fetch-depth: 0
-
-      - name: Setup LXD
-        uses: canonical/setup-lxd@v0.1.1
-        with:
-          channel: latest/stable
-
-      - name: Install dependencies
-        run: |
-          sudo snap install --classic --channel edge snapcraft
-          # Setup Launchpad credentials
-          mkdir -p ~/.local/share/snapcraft
-          echo -e "$LAUNCHPAD_TOKEN" >> ~/.local/share/snapcraft/launchpad-credentials
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "Github Actions"
-
-      - name: yq - portable yaml processor
-        uses: mikefarah/yq@v4
-
-      - if: ${{ matrix.confinement == 'classic' }}
-        name: Convert to Classic Snap
-        run: ./make-classic.sh
-
-      - name: Build Snap (remote)
-        run: snapcraft remote-build --launchpad-accept-public-upload
+    name: Build snaps
+    uses: canonical/grafana-agent-snap/.github/workflows/_build_snap.yaml
+    permissions:
+      contents: write
+    secrets: inherit
+    with:
+      release: false
