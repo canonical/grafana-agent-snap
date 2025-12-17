@@ -34,7 +34,7 @@ jobs:
           - confinement: "strict"
             channel: "latest/edge"
           - confinement: "classic"
-            channel: "0.40-classic/edge"
+            channel: "0.44-classic/edge"
 
           - runner: "ubuntu-latest"
             build-for: amd64
