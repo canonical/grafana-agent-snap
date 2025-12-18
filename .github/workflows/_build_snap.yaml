@@ -97,6 +97,20 @@ jobs:
         name: Build Snap (remote)
         run: snapcraft remote-build --build-for=${{ matrix.build-for }} --launchpad-accept-public-upload
       
+      - name: Rename log files for artifact upload
+        run: |
+          # Replace colons in snapcraft log filenames with underscores
+          # to avoid GitHub upload-artifact errors
+          for file in snapcraft-grafana-agent-*.txt; do
+            if [ -f "$file" ]; then
+              newfile=$(echo "$file" | tr ':' '_')
+              if [ "$file" != "$newfile" ]; then
+                mv "$file" "$newfile"
+                echo "Renamed: $file -> $newfile"
+              fi
+            fi
+          done
+      
       - name: Store snap
         uses: actions/upload-artifact@v4
         with:
