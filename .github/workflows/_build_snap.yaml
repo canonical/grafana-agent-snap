@@ -101,13 +101,12 @@ jobs:
         run: |
           # Replace colons in snapcraft log filenames with underscores
           # to avoid GitHub upload-artifact errors
+          shopt -s nullglob
           for file in snapcraft-grafana-agent-*.txt; do
-            if [ -f "$file" ]; then
-              newfile=$(echo "$file" | tr ':' '_')
-              if [ "$file" != "$newfile" ]; then
-                mv "$file" "$newfile"
-                echo "Renamed: $file -> $newfile"
-              fi
+            newfile=$(echo "$file" | tr ':' '_')
+            if [ "$file" != "$newfile" ]; then
+              mv "$file" "$newfile"
+              echo "Renamed: $file -> $newfile"
             fi
           done
       
