@@ -101,6 +101,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: grafana-agent-${{ matrix.confinement }}-${{ matrix.build-for }}-snap
+          # We want to capture remote-build logs that are named like this:
+          #   buildlog_snap_ubuntu_noble_s390x_snapcraft-grafana-agent-224a0731eb19a2037ff998b1c6cfd1d8_BUILDING.txt.gz
+          # and the snapcraft log that is named like this:
+          #   snapcraft-grafana-agent-224a0731eb19a2037ff998b1c6cfd1d8_s390x_2025-12-17T18:55:56.txt
           path: |
             *.snap
             *.txt.gz
