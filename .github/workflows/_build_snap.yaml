@@ -101,7 +101,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: grafana-agent-${{ matrix.confinement }}-${{ matrix.build-for }}-snap
-          path: "*.snap"
+          path: |
+            *.snap
+            *.txt.gz
+            snapcraft-grafana-agent-*.txt
 
       - if: ${{ inputs.release }}
         name: Upload and Publish Snap
