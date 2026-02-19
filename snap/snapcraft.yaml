@@ -28,6 +28,8 @@ plugs:
       - /proc/sys/kernel/random/urandom_min_reseed_secs
 apps:
   grafana-agent:
+    environment:
+      PATH: $SNAP/bin:$PATH
     daemon: simple
     command: agent-wrapper
     install-mode: disable
