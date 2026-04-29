@@ -6,6 +6,9 @@
 
 <p align="center"><a href="https://github.com/canonical/grafana-agent-snap/actions/workflows/release-snap.yaml"><img src="https://github.com/canonical/grafana-agent-snap/actions/workflows/release-snap.yaml/badge.svg"></a></p>
 
+> [!WARNING]  
+> This snap reaches end of life July 2026. Consider switching to [opentelemetry-collector](https://github.com/canonical/opentelemetry-collector-snap) for continued support.
+
 <p align="center"><b>This is the snap for Grafana Agent</b>, <i>“Grafana Agent is a telemetry collector for sending metrics, logs, and trace data to the opinionated Grafana observability stack”</i>. It works on Ubuntu, Fedora, Debian, and other major Linux
 distributions.</p>
 
