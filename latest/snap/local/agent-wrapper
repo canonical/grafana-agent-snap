@@ -1,0 +1,80 @@
+#!/bin/sh -eux
+
+# Get config option
+if [ "$(snapctl get reporting-enabled)" = "0" ]
+then
+  echo "Launching with reporting disabled" | systemd-cat
+  REPORTING_ARG="-disable-reporting"
+else
+  echo "Launching with reporting enabled" | systemd-cat
+  REPORTING_ARG=""
+fi
+
+get_tls_args() {
+  # $1 = path to config file
+
+  http_tls=$(yq '.server.http_tls_config.key_file and .server.http_tls_config.cert_file' "$1")
+  grpc_tls=$(yq '.server.grpc_tls_config.key_file and .server.grpc_tls_config.cert_file' "$1")
+
+  tls_args=""
+  if [ "$http_tls" = true ]; then
+    tls_args="-server.http.enable-tls"
+  fi
+  if [ "$grpc_tls" = true ]; then
+    tls_args="${tls_args} -server.grpc.enable-tls"
+  fi
+
+  echo "$tls_args"
+}
+
+launch_classic() {
+  # $1 = path to config file
+
+  echo "Launching with config from the host filesystem" | systemd-cat
+  exec "${SNAP}/agent" -config.expand-env -config.file "$1" "${REPORTING_ARG}" "$(get_tls_args "$1")"
+
+}
+
+
+launch_strict() {
+  # $1 = path to config file
+
+  exec "${SNAP}/agent" -config.expand-env -config.file "$1" "${REPORTING_ARG}" "$(get_tls_args "$1")"
+
+}
+
+get_strict_config_path() {
+
+  if snapctl is-connected etc-grafana-agent; then
+      IS_CONNECTED=0
+  else
+      IS_CONNECTED=1
+  fi
+
+  if [ "${IS_CONNECTED}" = "0" ] && [ -r /etc/grafana-agent.yaml ]
+  then
+    echo "Launching with config from the host filesystem" | systemd-cat
+    CONFIG_FILE="/etc/grafana-agent.yaml"
+  else
+    echo "Launching with minimal default config from the snap" | systemd-cat
+    CONFIG_FILE="$SNAP_DATA/etc/grafana-agent.yaml"
+  fi
+
+  echo "$CONFIG_FILE"
+}
+
+# Detect confinement type
+# https://forum.snapcraft.io/t/reliable-way-of-detecting-snap-confinement-mode/8896/4
+
+if grep -qxF "confinement: classic" "$SNAP/meta/snap.yaml"; then
+    IS_CLASSIC=0
+else
+    IS_CLASSIC=1
+fi
+
+if [ "${IS_CLASSIC}" = "0" ]
+then
+  launch_classic "/etc/grafana-agent.yaml"
+else
+  launch_strict "$(get_strict_config_path)"
+fi
