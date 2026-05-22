@@ -9,6 +9,9 @@ import? 'snaps.just'
   echo "For help with a specific recipe, run: just --usage <recipe>"
 
 # Update the snap to the latest upstream version (grafana-agent-specific: updates source-tag)
+# NOTE: This recipe only updates the `latest/` folder. The `0.44-classic/` folder must be
+# updated manually because the track name (`0.44-classic`) doesn't match the version pattern
+# (`0.44.x`). Since grafana-agent is in maintenance mode, this is acceptable.
 [arg("source_repo", help="Repository of the upstream project in 'org/repo' form")]
 [group("maintenance")]
 update source_repo:
@@ -44,27 +47,22 @@ update source_repo:
     exit 0
   fi
 
-  updated_folders=""
-
-  # Update the latest/ folder
+  # Update the latest/ folder only
+  # The 0.44-classic/ folder is NOT auto-updated because:
+  # 1. The track name (0.44-classic) doesn't match the version pattern (0.44.x)
+  # 2. grafana-agent is in maintenance mode - manual updates are acceptable
   echo "Updating latest/ folder to version $full_version ..."
   snapcraft_file="latest/snap/snapcraft.yaml"
   full_version="$full_version" yq -i '.version = strenv(full_version)' "$snapcraft_file"
   full_version="$full_version" yq -i '.parts.grafana-agent["source-tag"] = "v" + strenv(full_version)' "$snapcraft_file"
-  updated_folders="latest"
   echo "✓ Updated latest/ to $full_version"
 
-  # Update the X.Y/ folder if it exists (no auto-creation per ADR)
-  if [[ -d "$major_minor" ]]; then
-    echo "Updating $major_minor/ folder to version $full_version ..."
-    snapcraft_file="$major_minor/snap/snapcraft.yaml"
-    full_version="$full_version" yq -i '.version = strenv(full_version)' "$snapcraft_file"
-    full_version="$full_version" yq -i '.parts.grafana-agent["source-tag"] = "v" + strenv(full_version)' "$snapcraft_file"
-    updated_folders="$updated_folders $major_minor"
-    echo "✓ Updated $major_minor/ to $full_version"
-  else
-    echo "No $major_minor/ folder exists, skipping track-specific update"
-  fi
+  echo ""
+  echo "⚠ NOTE: 0.44-classic/ was NOT updated automatically."
+  echo "  To update it manually, run:"
+  echo "    yq -i '.version = \"$full_version\"' 0.44-classic/snap/snapcraft.yaml"
+  echo "    yq -i '.parts.grafana-agent[\"source-tag\"] = \"v$full_version\"' 0.44-classic/snap/snapcraft.yaml"
 
-  echo "updated_folders=$updated_folders"
+  echo ""
+  echo "updated_folders=latest"
   echo "new_version=$full_version"
